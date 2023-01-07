@@ -13,11 +13,11 @@ The following table summarizes the defined
 | `get-session-token <profile> <code>` | Obtain a session token for `<profile>` (and update `<profile>-sts`).      |
 
 
-Note: The `get-session-token` requires the `serial_number` of the MFA device
+Note: The `get-session-token` requires the `mfa_serial` of the MFA device
 recorded in the `~/.aws/config`:
 
 ```bash
-aws --profile=PROFILE configure set serial_number arn:aws:iam::999999999999:mfa/USER
+aws --profile=PROFILE configure set mfa_serial arn:aws:iam::999999999999:mfa/USER
 ```
 
 A session token may be generated and used with:
