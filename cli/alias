@@ -14,11 +14,11 @@ rotate-api-keys =
             unset AWS_SECRET_ACCESS_KEY
             unset AWS_SESSION_TOKEN
 
-            echo -n "${profile}: "
+            printf "${profile}: "
 
             aws_session_token=$(aws --profile="${profile}" configure get aws_session_token)
             if [ $? -eq 0 ]; then
-                >&2 echo "Skipping session token profile ${profile}"
+                >&2 printf "Skipping session token profile ${profile}\n"
                 continue;
             fi
 
@@ -29,7 +29,7 @@ rotate-api-keys =
 
             user=$(aws --profile="${profile}" iam get-user)
             if [ $? -ne 0 ]; then
-                >&2 echo "Cannot get user for profile ${profile}"
+                >&2 printf "Cannot get user for profile ${profile}\n"
                 continue;
             fi
 
@@ -37,13 +37,13 @@ rotate-api-keys =
 
             aws_access_key_id=$(aws --profile="${profile}" configure get aws_access_key_id)
             if [ $? -ne 0 ]; then
-                >&2 echo "Cannot get aws_access_key_id for profile ${profile}"
+                >&2 printf "Cannot get aws_access_key_id for profile ${profile}\n"
                 continue;
             fi
 
             access_key=$(aws --profile="${profile}" iam create-access-key --user-name="${user_name}")
             if [ $? -ne 0 ]; then
-                >&2 echo "Cannot create access_key for profile ${profile}"
+                >&2 printf "Cannot create access_key for profile ${profile}\n"
                 continue;
             fi
 
@@ -61,7 +61,7 @@ rotate-api-keys =
                 && aws --profile="${profile}" iam \
                        delete-access-key --user-name="${user_name}" --access-key-id="${aws_access_key_id}"
             if [ $? -ne 0 ]; then
-                >&2 echo "Cannot delete ${aws_access_key_id} from profile ${profile}"
+                >&2 printf "Cannot delete ${aws_access_key_id} from profile ${profile}\n"
             fi
         done
     }; f
@@ -80,7 +80,7 @@ get-session-token =
 
         serial_number="$(aws --profile="${AWS_PROFILE}" configure get serial_number)"
         if [ $? -ne 0 ]; then
-            >&2 echo "${AWS_PROFILE}.serial_number is not defined"
+            >&2 printf "${AWS_PROFILE}.serial_number is not defined\n"
             exit 1
         fi
 
