@@ -7,10 +7,10 @@ Customizations for the [AWS CLI][AWS CLI Command Reference]
 The following table summarizes the defined
 [aliases][Creating and using AWS CLI aliases]:
 
-| Alias                                | Notes                                                                     |
-|--------------------------------------|---------------------------------------------------------------------------|
-| `rotate-api-keys [ <profile> ... ]`  | Rotate the API keys of the specified profiles (or all if none specified). |
-| `get-session-token <profile> <code>` | Obtain a session token for `<profile>` (and update `<profile>-sts`).      |
+| Alias                                  | Notes                                                                     |
+|----------------------------------------|---------------------------------------------------------------------------|
+| `rotate-access-keys [ <profile> ... ]` | Rotate the API keys of the specified profiles (or all if none specified). |
+| `get-session-token <profile> <code>`   | Obtain a session token for `<profile>` (and update `<profile>-sts`).      |
 
 
 Note: The `get-session-token` requires the `mfa_serial` of the MFA device

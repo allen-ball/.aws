@@ -1,7 +1,7 @@
 [toplevel]
 
-# rotate-api-keys [ <profile> ... ]
-rotate-api-keys =
+# rotate-access-keys [ <profile> ... ]
+rotate-access-keys =
     !f() {
         if [ $# -gt 0 ]; then
             profiles="$@"
