@@ -10,10 +10,10 @@ The following table summarizes the defined
 | Alias                                  | Notes                                                                     |
 |----------------------------------------|---------------------------------------------------------------------------|
 | `rotate-access-keys [ <profile> ... ]` | Rotate the API keys of the specified profiles (or all if none specified). |
-| `get-session-token <profile> <code>`   | Obtain a session token for `<profile>` (and update `<profile>-sts`).      |
+| `get-mfa-profile <profile> <code>`     | Obtain a session token for `<profile>` (and update `<profile>-mfa`).      |
 
 
-Note: The `get-session-token` requires the `mfa_serial` of the MFA device
+Note: The `get-mfa-profile` requires the `mfa_serial` of the MFA device
 recorded in the `~/.aws/config`:
 
 ```bash
@@ -23,8 +23,8 @@ aws --profile=PROFILE configure set mfa_serial arn:aws:iam::999999999999:mfa/USE
 A session token may be generated and used with:
 
 ```bash
-$ aws get-session-token PROFILE 916683
-$ eval $(aws --profile=PROFILE-sts configure export-credentials --format=env)
+$ aws get-mfa-profile PROFILE 916683
+$ eval $(aws --profile=PROFILE-mfa configure export-credentials --format=env)
 ```
 
 

@@ -22,9 +22,9 @@ rotate-access-keys =
                 continue;
             fi
 
-            # aws_session_token=$(aws --profile="${profile}-sts" configure get aws_session_token)
+            # aws_session_token=$(aws --profile="${profile}-mfa" configure get aws_session_token)
             # if [ $? -eq 0 ]; then
-            #     eval $(aws --profile="${profile}-sts" configure export-credentials --format=env)
+            #     eval $(aws --profile="${profile}-mfa" configure export-credentials --format=env)
             # fi
 
             user=$(aws --profile="${profile}" iam get-user)
@@ -66,8 +66,8 @@ rotate-access-keys =
         done
     }; f
 
-# get-session-token <profile> <token_code>
-get-session-token =
+# get-mfa-profile <profile> <token_code>
+get-mfa-profile =
     !f() {
         export AWS_PROFILE="$1"
         token_code="$2"
@@ -87,16 +87,16 @@ get-session-token =
         credentials="$(aws --output json \
                            sts get-session-token --serial-number="${mfa_serial}" --token-code="${token_code}")"
         if [ $? -eq 0 ]; then
-            aws --profile="${AWS_PROFILE}-sts" configure \
+            aws --profile="${AWS_PROFILE}-mfa" configure \
                 set aws_access_key_id "$(echo "${credentials}" | jq --raw-output .Credentials.AccessKeyId)"
-            aws --profile="${AWS_PROFILE}-sts" configure \
+            aws --profile="${AWS_PROFILE}-mfa" configure \
                 set aws_secret_access_key "$(echo "${credentials}" | jq --raw-output .Credentials.SecretAccessKey)"
-            aws --profile="${AWS_PROFILE}-sts" configure \
+            aws --profile="${AWS_PROFILE}-mfa" configure \
                 set aws_session_token "$(echo "${credentials}" | jq --raw-output .Credentials.SessionToken)"
 
-            aws --profile="${AWS_PROFILE}-sts" configure set region "$(aws configure get region)"
-            aws --profile="${AWS_PROFILE}-sts" configure set output "$(aws configure get output)"
-            aws --profile="${AWS_PROFILE}-sts" configure set cli_pager ""
+            aws --profile="${AWS_PROFILE}-mfa" configure set region "$(aws configure get region)"
+            aws --profile="${AWS_PROFILE}-mfa" configure set output "$(aws configure get output)"
+            aws --profile="${AWS_PROFILE}-mfa" configure set cli_pager ""
         else
             >&2 echo "Cannot generate ${AWS_PROFILE} session token"
         fi
