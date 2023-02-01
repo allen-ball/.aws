@@ -7,10 +7,11 @@ Customizations for the [AWS CLI][AWS CLI Command Reference]
 The following table summarizes the defined
 [aliases][Creating and using AWS CLI aliases]:
 
-| Alias                                  | Notes                                                              |
-|----------------------------------------|--------------------------------------------------------------------|
-| `rotate-access-keys [ <profile> ... ]` | Rotate the access keys of the specified profiles (default: all).   |
-| `get-mfa-profile <profile> <code>`     | Obtain a session token for `<profile>` and update `<profile>-mfa`. |
+| Alias                                      | Notes                                                              |
+|--------------------------------------------|--------------------------------------------------------------------|
+| `rotate-access-keys [ <profile> ... ]`     | Rotate the access keys of the specified profiles (default: all).   |
+| `get-mfa-profile <profile> <code>`         | Obtain a session token for `<profile>` and update `<profile>-mfa`. |
+| `remove-ssh-known-hosts [ <profile> ... ]` | Remove entries from `${HOME}/.ssh/known_hosts`.                    |
 
 Note: The `get-mfa-profile` requires the `mfa_serial` of the MFA device
 recorded in the `~/.aws/config`:
