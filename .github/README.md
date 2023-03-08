@@ -9,6 +9,7 @@ The following table summarizes the defined
 
 | Alias                                      | Notes                                                              |
 |--------------------------------------------|--------------------------------------------------------------------|
+| `for-each-profile <request> ...`           | Run the `aws` request for all profiles.                            |
 | `rotate-access-keys [ <profile> ... ]`     | Rotate the access keys of the specified profiles (default: all).   |
 | `get-mfa-profile <profile> <code>`         | Obtain a session token for `<profile>` and update `<profile>-mfa`. |
 | `remove-ssh-known-hosts [ <profile> ... ]` | Remove entries from `${HOME}/.ssh/known_hosts`.                    |
