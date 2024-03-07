@@ -10,7 +10,7 @@ for-each-profile =
             unset AWS_SECRET_ACCESS_KEY
             unset AWS_SESSION_TOKEN
 
-            aws --profile="${profile}" "$@"
+            aws --profile="${profile}" --output=json "$@"
         done
     }; f
 
@@ -31,7 +31,7 @@ rotate-access-keys =
 
             printf "${profile}: "
 
-            aws_session_token=$(aws --profile="${profile}" configure get aws_session_token)
+            aws_session_token=$(aws --profile="${profile}" --output=json configure get aws_session_token)
             if [ $? -eq 0 ]; then
                 >&2 printf "Skipping session token profile ${profile}\n"
                 continue;
@@ -42,7 +42,7 @@ rotate-access-keys =
             #     eval $(aws --profile="${profile}-mfa" configure export-credentials --format=env)
             # fi
 
-            user=$(aws --profile="${profile}" iam get-user)
+            user=$(aws --profile="${profile}" --output=json iam get-user)
             if [ $? -ne 0 ]; then
                 >&2 printf "Cannot get user for profile ${profile}\n"
                 continue;
@@ -50,30 +50,30 @@ rotate-access-keys =
 
             user_name="$(echo "${user}" | jq --raw-output .User.UserName)"
 
-            aws_access_key_id=$(aws --profile="${profile}" configure get aws_access_key_id)
+            aws_access_key_id=$(aws --profile="${profile}" --output=json configure get aws_access_key_id)
             if [ $? -ne 0 ]; then
                 >&2 printf "Cannot get aws_access_key_id for profile ${profile}\n"
                 continue;
             fi
 
-            access_key=$(aws --profile="${profile}" iam create-access-key --user-name="${user_name}")
+            access_key=$(aws --profile="${profile}" --output=json iam create-access-key --user-name="${user_name}")
             if [ $? -ne 0 ]; then
                 >&2 printf "Cannot create access_key for profile ${profile}\n"
                 continue;
             fi
 
-            aws --profile="${profile}" configure \
+            aws --profile="${profile}" --output=json configure \
                 set aws_access_key_id "$(echo "${access_key}" | jq --raw-output .AccessKey.AccessKeyId)"
-            aws --profile="${profile}" configure \
+            aws --profile="${profile}" --output=json configure \
                 set aws_secret_access_key "$(echo "${access_key}" | jq --raw-output .AccessKey.SecretAccessKey)"
 
             echo "$(echo "${access_key}" | jq --raw-output .AccessKey.AccessKeyId)"
 
             sleep 10
 
-            aws --profile="${profile}" iam \
+            aws --profile="${profile}" --output=json iam \
                 update-access-key --user-name="${user_name}" --access-key-id="${aws_access_key_id}" --status=Inactive \
-                && aws --profile="${profile}" iam \
+                && aws --profile="${profile}" --output=json iam \
                        delete-access-key --user-name="${user_name}" --access-key-id="${aws_access_key_id}"
             if [ $? -ne 0 ]; then
                 >&2 printf "Cannot delete ${aws_access_key_id} from profile ${profile}\n"
@@ -99,7 +99,7 @@ get-mfa-profile =
             exit 1
         fi
 
-        credentials="$(aws --output json \
+        credentials="$(aws --output=json \
                            sts get-session-token --serial-number="${mfa_serial}" --token-code="${token_code}")"
         if [ $? -eq 0 ]; then
             aws --profile="${AWS_PROFILE}-mfa" configure \
@@ -131,7 +131,7 @@ remove-ssh-known-hosts =
             unset AWS_SECRET_ACCESS_KEY
             unset AWS_SESSION_TOKEN
 
-            aws --profile="${profile}" --output text \
+            aws --profile="${profile}" --output=text \
                 ec2 describe-instances \
                     --query 'Reservations[].Instances[].[PublicDnsName, PublicIpAddress, PrivateIpAddress] | []' \
             | xargs -n 1 ssh-keygen -R
