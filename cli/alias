@@ -1,18 +1,20 @@
 [toplevel]
 
+# Does not work dues to 'aws` command eating $@.
 # for-each-profile <request> ...
-for-each-profile =
-    !f() {
-        profiles=$(aws configure list-profiles)
-
-        for profile in ${profiles}; do
-            unset AWS_ACCESS_KEY_ID
-            unset AWS_SECRET_ACCESS_KEY
-            unset AWS_SESSION_TOKEN
-
-            aws --profile="${profile}" "$@"
-        done
-    }; f
+#for-each-profile =
+#    !f() {
+#        argv=( "$@" )
+#        profiles=$(aws configure list-profiles)
+#
+#        for profile in ${profiles}; do
+#            unset AWS_ACCESS_KEY_ID
+#            unset AWS_SECRET_ACCESS_KEY
+#            unset AWS_SESSION_TOKEN
+#
+#            aws --profile="${profile}" "${argv[@]}"
+#        done
+#    }; f
 
 
 # rotate-access-keys [ <profile> ... ]
