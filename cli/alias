@@ -10,7 +10,7 @@ for-each-profile =
             unset AWS_SECRET_ACCESS_KEY
             unset AWS_SESSION_TOKEN
 
-            aws --profile="${profile}" --output=json "$@"
+            aws --profile="${profile}" "$@"
         done
     }; f
 
