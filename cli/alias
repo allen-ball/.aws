@@ -144,3 +144,46 @@ remove-ssh-known-hosts =
             | xargs -n 1 ssh-keygen -R
         done
     }; f
+
+
+[command backup]
+
+# retain-latest-recovery-points-forever <vault>
+retain-latest-recovery-points-forever =
+    !f() {
+         usage() {
+             >&2 printf "Usage: retain-latest-recovery-points-forever <vault>\n" "$0"
+         }
+
+         set -e
+
+         OPTIND=1
+
+         while getopts "h?" opt; do
+             case "$opt" in
+                 h|\?)
+                     usage
+                     exit 0
+                     ;;
+             esac
+         done
+
+         shift $((OPTIND-1))
+
+         [ "${1:-}" = "--" ] && shift
+
+         if [ -n "$1" ]; then
+             vault="$1"; shift
+         else
+             >&2 printf "A vault must be specified.\n\n"
+             usage
+             exit 1
+         fi
+
+         aws --output=text backup list-protected-resources-by-backup-vault \
+             --backup-vault-name="${vault}" --query='Results[*].[LastRecoveryPointArn]' \
+         | while read -r arn; do
+             aws backup update-recovery-point-lifecycle --backup-vault-name="${vault}" \
+                 --recovery-point-arn="${arn}" --lifecycle=DeleteAfterDays=-1
+         done
+    }; f
