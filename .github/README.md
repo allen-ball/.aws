@@ -10,7 +10,7 @@ The following table summarizes the defined
 | Alias                                      | Notes                                                              |
 |--------------------------------------------|--------------------------------------------------------------------|
 | `rotate-access-keys [ <profile> ... ]`     | Rotate the access keys of the specified profiles (default: all).   |
-| `get-mfa-profile <profile> <code>`         | Obtain a session token for `<profile>` and update `<profile>-mfa`. |
+| `get-session-profile <profile> <code>`     | Obtain a session token for `<profile>` and update `<profile>-mfa`. |
 | `remove-ssh-known-hosts [ <profile> ... ]` | Remove entries from `${HOME}/.ssh/known_hosts`.                    |
 
 Note: The `get-mfa-profile` requires the `mfa_serial` of the MFA device
@@ -23,8 +23,8 @@ $ aws --profile=PROFILE configure set mfa_serial arn:aws:iam::999999999999:mfa/U
 A session token may be generated and used with:
 
 ```bash
-$ aws get-mfa-profile PROFILE 916683
-$ eval $(aws --profile=PROFILE-mfa configure export-credentials --format=env)
+$ aws get-session-profile PROFILE 916683
+$ eval $(aws --profile=PROFILE-session configure export-credentials --format=env)
 ```
 
 
