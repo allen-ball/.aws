@@ -1,6 +1,12 @@
 [toplevel]
 
-# Does not work dues to 'aws` command eating $@.
+# show-invocation [ ... ]
+show-invocation =
+    !f() {
+         set
+    }; f
+
+# Does not work due to 'aws` command eating $@.
 # for-each-profile <request> ...
 #for-each-profile =
 #    !f() {
@@ -15,7 +21,6 @@
 #            aws --profile="${profile}" "${argv[@]}"
 #        done
 #    }; f
-
 
 # rotate-access-keys [ <profile> ... ]
 rotate-access-keys =
