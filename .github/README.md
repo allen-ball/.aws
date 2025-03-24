@@ -14,7 +14,7 @@ The following table summarizes the defined
 | `remove-ssh-known-hosts [ <profile> ... ]`             | Remove entries from `${HOME}/.ssh/known_hosts`.                    |
 | `backup retain-latest-recovery-points-forever <vault>` | Remove expiration from latest recovery points in `<vault>`.        |
 
-Note: The `get-mfa-profile` requires the `mfa_serial` of the MFA device
+Note: The `get-session-profile` requires the `mfa_serial` of the MFA device
 recorded in the `~/.aws/config`:
 
 ```bash

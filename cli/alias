@@ -35,6 +35,7 @@ rotate-access-keys =
             unset AWS_ACCESS_KEY_ID
             unset AWS_SECRET_ACCESS_KEY
             unset AWS_SESSION_TOKEN
+            unset session_profile
 
             printf "${profile}: "
 
@@ -44,12 +45,14 @@ rotate-access-keys =
                 continue;
             fi
 
-            # aws_session_token=$(aws --profile="${profile}-session" configure get aws_session_token)
-            # if [ $? -eq 0 ]; then
-            #     eval $(aws --profile="${profile}-session" configure export-credentials --format=env)
-            # fi
+            aws_session_token=$(aws --profile="${profile}-session" configure get aws_session_token 2> /dev/null)
+            if [ $? -eq 0 ]; then
+                session_profile="${profile}-session"
+            else
+                session_profile="${profile}"
+            fi
 
-            user=$(aws --profile="${profile}" --output=json iam get-user)
+            user=$(aws --profile="${session_profile}" --output=json iam get-user)
             if [ $? -ne 0 ]; then
                 >&2 printf "Cannot get user for profile ${profile}\n"
                 continue;
@@ -63,9 +66,10 @@ rotate-access-keys =
                 continue;
             fi
 
-            access_key=$(aws --profile="${profile}" --output=json iam create-access-key --user-name="${user_name}")
+            access_key=$(aws --profile="${session_profile}" --output=json \
+                             iam create-access-key --user-name="${user_name}")
             if [ $? -ne 0 ]; then
-                >&2 printf "Cannot create access_key for profile ${profile}\n"
+                >&2 printf "Cannot create access_key for profile ${session_profile}\n"
                 continue;
             fi
 
@@ -78,9 +82,9 @@ rotate-access-keys =
 
             sleep 10
 
-            aws --profile="${profile}" --output=json iam \
+            aws --profile="${session_profile}" --output=json iam \
                 update-access-key --user-name="${user_name}" --access-key-id="${aws_access_key_id}" --status=Inactive \
-                && aws --profile="${profile}" --output=json iam \
+                && aws --profile="${session_profile}" --output=json iam \
                        delete-access-key --user-name="${user_name}" --access-key-id="${aws_access_key_id}"
             if [ $? -ne 0 ]; then
                 >&2 printf "Cannot delete ${aws_access_key_id} from profile ${profile}\n"
