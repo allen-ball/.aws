@@ -41,7 +41,7 @@ rotate-access-keys =
 
             aws_session_token=$(aws --profile="${profile}" --output=json configure get aws_session_token)
             if [ $? -eq 0 ]; then
-                >&2 printf "Skipping session token profile ${profile}\n"
+                >&2 printf "Skipping session token profile\n"
                 continue;
             fi
 
@@ -54,7 +54,7 @@ rotate-access-keys =
 
             user=$(aws --profile="${session_profile}" --output=json iam get-user)
             if [ $? -ne 0 ]; then
-                >&2 printf "Cannot get user for profile ${profile}\n"
+                >&2 printf "Cannot get user\n"
                 continue;
             fi
 
@@ -62,14 +62,14 @@ rotate-access-keys =
 
             aws_access_key_id=$(aws --profile="${profile}" --output=json configure get aws_access_key_id)
             if [ $? -ne 0 ]; then
-                >&2 printf "Cannot get aws_access_key_id for profile ${profile}\n"
+                >&2 printf "Cannot get aws_access_key_id\n"
                 continue;
             fi
 
             access_key=$(aws --profile="${session_profile}" --output=json \
                              iam create-access-key --user-name="${user_name}")
             if [ $? -ne 0 ]; then
-                >&2 printf "Cannot create access_key for profile ${session_profile}\n"
+                >&2 printf "Cannot create access_key\n"
                 continue;
             fi
 
@@ -87,7 +87,7 @@ rotate-access-keys =
                 && aws --profile="${session_profile}" --output=json iam \
                        delete-access-key --user-name="${user_name}" --access-key-id="${aws_access_key_id}"
             if [ $? -ne 0 ]; then
-                >&2 printf "Cannot delete ${aws_access_key_id} from profile ${profile}\n"
+                >&2 printf "Cannot delete ${aws_access_key_id}\n"
             fi
         done
     }; f
