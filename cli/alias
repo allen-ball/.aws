@@ -188,6 +188,7 @@ retain-latest-recovery-points-forever =
              --backup-vault-name="${vault}" --query='Results[*].[LastRecoveryPointArn]' \
          | while read -r arn; do
              aws backup update-recovery-point-lifecycle --backup-vault-name="${vault}" \
-                 --recovery-point-arn="${arn}" --lifecycle=DeleteAfterDays=-1
+                 --recovery-point-arn="${arn}" --lifecycle=DeleteAfterDays=-1 2>&1 \
+             | grep -v "Cannot update lifecycle of a nested recovery point" || true
          done
     }; f
