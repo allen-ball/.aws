@@ -13,6 +13,7 @@ The following table summarizes the defined
 | `get-session-profile <profile> <code>`                 | Obtain a session token for `<profile>` and update `<profile>-mfa`. |
 | `remove-ssh-known-hosts [ <profile> ... ]`             | Remove entries from `${HOME}/.ssh/known_hosts`.                    |
 | `backup retain-latest-recovery-points-forever <vault>` | Remove expiration from latest recovery points in `<vault>`.        |
+| `ec2 private-ip-addresses`                             | Get the private addresses of all EC2 instances                     |
 
 Note: The `get-session-profile` requires the `mfa_serial` of the MFA device
 recorded in the `~/.aws/config`:
