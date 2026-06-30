@@ -7,13 +7,14 @@ Customizations for the [AWS CLI][AWS CLI Command Reference]
 The following table summarizes the defined
 [aliases][Creating and using AWS CLI aliases]:
 
-| Alias                                                  | Notes                                                              |
-|--------------------------------------------------------|--------------------------------------------------------------------|
-| `rotate-access-keys [ <profile> ... ]`                 | Rotate the access keys of the specified profiles (default: all).   |
-| `get-session-profile <profile> <code>`                 | Obtain a session token for `<profile>` and update `<profile>-mfa`. |
-| `remove-ssh-known-hosts [ <profile> ... ]`             | Remove entries from `${HOME}/.ssh/known_hosts`.                    |
-| `backup retain-latest-recovery-points-forever <vault>` | Remove expiration from latest recovery points in `<vault>`.        |
-| `ec2 private-ip-addresses`                             | Get the private addresses of all EC2 instances                     |
+| Alias                                                  | Notes                                                               |
+|--------------------------------------------------------|---------------------------------------------------------------------|
+| `rotate-access-keys [ <profile> ... ]`                 | Rotate the access keys of the specified profiles (default: all).    |
+| `get-session-profile <profile> <code>`                 | Obtain a session token for `<profile>` and update `<profile>-mfa`.  |
+| `remove-ssh-known-hosts [ <profile> ... ]`             | Remove entries from `${HOME}/.ssh/known_hosts`.                     |
+| `backup retain-latest-recovery-points-forever <vault>` | Remove expiration from latest recovery points in `<vault>`.         |
+| `ec2 active-regions`                                   | List all active regions                                             |
+| `ec2 private-ip-addresses`                             | Get the private addresses of all EC2 instances (all active regions) |
 
 Note: The `get-session-profile` requires the `mfa_serial` of the MFA device
 recorded in the `~/.aws/config`:

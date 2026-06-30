@@ -192,3 +192,44 @@ retain-latest-recovery-points-forever =
              | grep -v "Cannot update lifecycle of a nested recovery point" || true
          done
     }; f
+
+
+[command ec2]
+
+# active-regions
+active-regions =
+    !f() {
+         usage() {
+             >&2 printf "Usage: active-regions\n" "$0"
+         }
+
+         if [ $# -gt 0 ]; then
+             usage
+             exit 1
+         fi
+
+         aws --output=text \
+             ec2 describe-regions \
+                 --query 'Regions[*].[RegionName]' \
+                 --filters Name=opt-in-status,Values=opt-in-not-required,opted-in
+    }; f
+
+# private-ip-addresses
+private-ip-addresses =
+    !f() {
+         usage() {
+             >&2 printf "Usage: private-ip-addresses\n" "$0"
+         }
+
+         if [ $# -gt 0 ]; then
+             usage
+             exit 1
+         fi
+
+         aws ec2 active-regions \
+             | (while IFS= read -r region; do \
+                 aws --output=text --region="${region}" \
+                     ec2 describe-instances --query 'Reservations[*].Instances[*].PrivateIpAddress'; \
+               done) \
+         | sort -t . -k 1,1n -k 2,2n -k 3,3n -k 4,4n
+    }; f
